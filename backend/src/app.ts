@@ -19,6 +19,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Handle static files
 app.use("/assets", express.static("public/assets"));
+app.use("/files", express.static("public/files"));
 
 // Handle routes
 app.use("/api", apiRoutes);

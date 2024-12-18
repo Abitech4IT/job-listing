@@ -1,6 +1,15 @@
-import mongoose from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
-const jobSchema = new mongoose.Schema({
+export interface IJob extends Document {
+  title: string;
+  type: string;
+  tags: string[];
+  location: string;
+  imageUrl?: string;
+  createdAt?: string;
+}
+
+const jobSchema: Schema<IJob> = new Schema({
   title: {
     type: String,
     require: [true, "please enter the job title"],
@@ -9,11 +18,16 @@ const jobSchema = new mongoose.Schema({
     type: String,
     require: [true, "please enter the job type"],
   },
+  location: {
+    type: String,
+    require: [true, "please enter the job location"],
+  },
   tags: {
     type: [String],
   },
   imageUrl: {
     type: String,
+    default: "jobdp.jpg",
   },
   createdAt: {
     type: Date,
@@ -21,4 +35,4 @@ const jobSchema = new mongoose.Schema({
   },
 });
 
-export const Job = mongoose.model("Job", jobSchema);
+export const Job = model<IJob>("Job", jobSchema);
