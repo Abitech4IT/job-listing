@@ -4,6 +4,12 @@ import { requestBaseSchema } from "./getRequest.service";
 
 const querySchema = z.object({
   ...requestBaseSchema,
+  tags: z
+    .string()
+    .optional()
+    .transform((value) =>
+      value ? value.split(",").map((tag) => tag.trim()) : []
+    ),
 });
 
 export const validateGetAllJobsRequest = (req: Request): ValidateResponse => {

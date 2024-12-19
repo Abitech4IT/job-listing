@@ -18,13 +18,12 @@ export const getAll = catchAsync(
 
     const query = validatedData.query;
 
-    const jobs = await jobService.getJobs();
+    const jobs = await jobService.getJobs({ ...query });
 
     if (!jobs || jobs.length === 0) {
       return next(new AppError("No jobs found", 404));
     }
 
-    // Transform each job individually
     const transformedJobs = await Promise.all(
       jobs.map((job) =>
         jobService.dataValidation

@@ -1,4 +1,4 @@
-import { Schema, Document, model } from "mongoose";
+import { Schema, Document, model, Model } from "mongoose";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import validator from "validator";
@@ -16,7 +16,11 @@ export interface IUser extends Document {
   ) => Promise<boolean>;
 }
 
-const userSchema: Schema<IUser> = new Schema({
+export interface IUserDocument extends Document, IUser {}
+
+export interface IUserModel extends Model<IUserDocument> {}
+
+const userSchema: Schema<IUserDocument> = new Schema({
   firstName: {
     type: String,
     require: [true, "please enter your firstName"],

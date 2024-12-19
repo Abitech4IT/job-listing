@@ -1,6 +1,6 @@
 import express from "express";
 import v1Routes from "./v1";
-import errorHandler from "@middlewares/error-handler.middleware";
+import { errorHandler } from "@middlewares/error-handler.middleware";
 
 const apiRoutes = express.Router();
 

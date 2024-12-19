@@ -7,6 +7,7 @@ export interface IJob extends Document {
   location: string;
   imageUrl?: string;
   createdAt?: string;
+  postDate?: string;
 }
 
 const jobSchema: Schema<IJob> = new Schema({
@@ -28,6 +29,10 @@ const jobSchema: Schema<IJob> = new Schema({
   imageUrl: {
     type: String,
     default: "jobdp.jpg",
+  },
+  postDate: {
+    type: Date,
+    default: Date.now(),
   },
   createdAt: {
     type: Date,

@@ -17,8 +17,7 @@ const arrString = z
 
 export const requestBaseSchema = {
   sort: nString,
-  searchStrings: arrString,
-  _id: nString,
+  tags: arrString,
 };
 const schema = z.object(requestBaseSchema);
 
