@@ -3,16 +3,12 @@ import catchAsync from "@helpers/catchAsync";
 import { IUserDocument, User } from "@models/user.model";
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { promisify } from "util";
+import { CustomRequest } from "./types";
 
 interface DecodedToken {
   id: string;
   iat?: number;
   exp?: number;
-}
-
-interface CustomRequest extends Request {
-  user?: IUserDocument;
 }
 
 export const authenticate = catchAsync(
