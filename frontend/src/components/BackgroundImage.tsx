@@ -1,3 +1,5 @@
+import { Button, Stack } from "@mui/material";
+
 const BackgroundImage = () => {
   return (
     <div
@@ -8,7 +10,16 @@ const BackgroundImage = () => {
         height: "156px",
         width: "100%",
       }}
-    ></div>
+    >
+      <Stack
+        direction="row"
+        justifyContent="flex-end"
+        alignItems="center"
+        p={2}
+      >
+        <Button variant="outlined">Logout</Button>
+      </Stack>
+    </div>
   );
 };
 
