@@ -5,6 +5,7 @@ export interface IJob extends Document {
   type: string;
   tags: string[];
   location: string;
+  company: string;
   imageUrl?: string;
   createdAt?: string;
   postDate?: string;
@@ -22,6 +23,10 @@ const jobSchema: Schema<IJob> = new Schema({
   location: {
     type: String,
     require: [true, "please enter the job location"],
+  },
+  company: {
+    type: String,
+    require: [true, "please enter the job company"],
   },
   tags: {
     type: [String],

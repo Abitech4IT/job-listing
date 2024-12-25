@@ -1,9 +1,16 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { SignupSchema } from "../../schema/SignupSchema";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useSignUp } from "../../services/signupAPI";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { ErrorResponse } from "../../types";
 
 const SignUp = () => {
+  const navigate = useNavigate();
+  const { signup } = useSignUp();
+
   return (
     <Box p={0} m={0}>
       <Container
@@ -45,9 +52,24 @@ const SignUp = () => {
               password: "",
             }}
             validationSchema={SignupSchema}
+            validateOnChange={false}
             onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-              setSubmitting(false); // For now, to prevent spamming
+              signup(values, {
+                onSuccess: () => {
+                  toast.success("Account created successful!");
+                  navigate("/jobs");
+                },
+                onError: (error: unknown) => {
+                  const err = error as AxiosError<ErrorResponse>;
+                  const errorMessage =
+                    err.response?.data?.message ||
+                    "An unexpected error occurred!";
+                  toast.error(errorMessage);
+                },
+                onSettled: () => {
+                  setSubmitting(false);
+                },
+              });
             }}
           >
             {({ isSubmitting, values, errors, handleChange }) => (
@@ -59,7 +81,6 @@ const SignUp = () => {
                     gap: "20px",
                   }}
                 >
-                  {/* First Name */}
                   <Box>
                     <Typography
                       variant="body1"
@@ -79,7 +100,6 @@ const SignUp = () => {
                     />
                   </Box>
 
-                  {/* Last Name */}
                   <Box>
                     <Typography
                       variant="body1"
@@ -99,7 +119,6 @@ const SignUp = () => {
                     />
                   </Box>
 
-                  {/* Email */}
                   <Box>
                     <Typography
                       variant="body1"
@@ -119,7 +138,6 @@ const SignUp = () => {
                     />
                   </Box>
 
-                  {/* Password */}
                   <Box>
                     <Typography
                       variant="body1"
@@ -139,7 +157,6 @@ const SignUp = () => {
                     />
                   </Box>
 
-                  {/* Submit Button */}
                   <Button
                     type="submit"
                     disabled={isSubmitting}

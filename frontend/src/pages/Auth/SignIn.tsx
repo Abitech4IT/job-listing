@@ -1,9 +1,21 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { LoginSchema } from "../../schema/LoginSchema";
+import { AxiosError } from "axios";
+import toast from "react-hot-toast";
+import { useUser } from "../../services/signinAPI";
+
+type ErrorResponse = {
+  message: string;
+};
 
 const SignIn = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const { signin } = useUser();
+
   return (
     <Box p={0} m={0}>
       <Container
@@ -43,9 +55,32 @@ const SignIn = () => {
               password: "",
             }}
             validationSchema={LoginSchema}
+            validateOnChange={false}
             onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-              setSubmitting(false); // For now, to prevent spamming
+              signin(values, {
+                onSuccess: () => {
+                  toast.success("User login successful!");
+                  const from = location.state?.from || "/jobs";
+                  navigate(from, { replace: true });
+                },
+                onError: (error: unknown) => {
+                  const err = error as AxiosError<ErrorResponse>;
+                  const errorMessage =
+                    err.response?.data?.message ||
+                    err.response?.statusText ||
+                    "An unexpected error occurred!";
+                  if (err.response?.status === 401) {
+                    toast.error("Invalid credentials. Please try again.");
+                  } else if (err.response?.status === 429) {
+                    toast.error("Too many attempts. Please try again later.");
+                  } else {
+                    toast.error(errorMessage);
+                  }
+                },
+                onSettled: () => {
+                  setSubmitting(false);
+                },
+              });
             }}
           >
             {({ isSubmitting, values, errors, handleChange }) => (
@@ -57,7 +92,6 @@ const SignIn = () => {
                     gap: "20px",
                   }}
                 >
-                  {/* Email */}
                   <Box>
                     <Typography
                       variant="body1"
@@ -77,7 +111,6 @@ const SignIn = () => {
                     />
                   </Box>
 
-                  {/* Password */}
                   <Box>
                     <Typography
                       variant="body1"
@@ -97,7 +130,6 @@ const SignIn = () => {
                     />
                   </Box>
 
-                  {/* Submit Button */}
                   <Button
                     type="submit"
                     disabled={isSubmitting}

@@ -3,13 +3,7 @@ import catchAsync from "@helpers/catchAsync";
 import { IUserDocument, User } from "@models/user.model";
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { CustomRequest } from "./types";
-
-interface DecodedToken {
-  id: string;
-  iat?: number;
-  exp?: number;
-}
+import { CustomRequest, DecodedToken } from "./types";
 
 export const authenticate = catchAsync(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
@@ -47,7 +41,6 @@ export const authenticate = catchAsync(
 
     //Grant access to protected routes
     req.user = currentUser;
-    res.locals.user = currentUser;
     next();
   }
 );

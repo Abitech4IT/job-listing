@@ -7,6 +7,7 @@ const arrString = z.array(rString);
 const bodySchema = z.object({
   title: rString,
   type: rString,
+  company: rString,
   tags: arrString,
   location: rString,
 });

@@ -1,12 +1,13 @@
 import express from "express";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import apiRoutes from "./routes";
 
 const app = express();
 
 app.use(
   cors({
-    origin: "*",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true,
   })
@@ -14,6 +15,10 @@ app.use(
 
 // Enable json body
 app.use(express.json());
+
+//Enable the cookieParser
+app.use(cookieParser());
+
 // Enable urlencoded body
 app.use(express.urlencoded({ extended: true }));
 

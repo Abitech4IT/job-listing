@@ -46,6 +46,7 @@ const responseSchema = z.object({
   title: nString,
   type: nString,
   location: nString,
+  company: nString,
   imageUrl: nString,
   tags: arrString,
   postDate: nDate,

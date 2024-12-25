@@ -2,7 +2,7 @@ import { Request } from "express";
 import { z, ZodIssue } from "zod";
 
 const rString = z.string().trim().min(1);
-const roleEnum = z.enum(["user", "admin"]);
+const roleEnum = z.enum(["user", "admin"]).default("user");
 
 const bodySchema = z.object({
   email: rString,

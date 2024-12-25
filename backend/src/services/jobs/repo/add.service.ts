@@ -3,6 +3,7 @@ import { IJob, Job } from "@models/job.model";
 type requestBodyTypes = {
   title: string;
   type: string;
+  company: string;
   tags: string[];
   location: string;
 };

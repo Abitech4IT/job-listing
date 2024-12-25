@@ -1,8 +1,16 @@
 import { Box, Button, Container, TextField, Typography } from "@mui/material";
 import { Form, Formik } from "formik";
 import { JobSchema } from "../../schema/JobSchema";
+import { useCreateJob } from "../../services/jobsAPI";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { ErrorResponse } from "../../types";
 
 const CreatePost = () => {
+  const { create } = useCreateJob();
+  const navigate = useNavigate();
+
   return (
     <Box p={0} m={0}>
       <Container
@@ -40,14 +48,29 @@ const CreatePost = () => {
             initialValues={{
               title: "",
               type: "",
+              company: "",
               location: "",
               tags: [],
             }}
             validationSchema={JobSchema}
             validateOnChange={false}
             onSubmit={(values, { setSubmitting }) => {
-              console.log(values);
-              setSubmitting(false);
+              create(values, {
+                onSuccess: () => {
+                  toast.success("Job created successful!");
+                  navigate("/jobs");
+                },
+                onError: (error: unknown) => {
+                  const err = error as AxiosError<ErrorResponse>;
+                  const errorMessage =
+                    err.response?.data?.message ||
+                    "An unexpected error occurred!";
+                  toast.error(errorMessage);
+                },
+                onSettled: () => {
+                  setSubmitting(false);
+                },
+              });
             }}
           >
             {({ isSubmitting, values, errors, handleChange }) => (
@@ -74,6 +97,24 @@ const CreatePost = () => {
                       onChange={handleChange}
                       error={!!errors.title}
                       helperText={errors.title}
+                      fullWidth
+                    />
+                  </Box>
+                  <Box>
+                    <Typography
+                      variant="body1"
+                      sx={{ mb: 1, fontWeight: "bold" }}
+                    >
+                      Company
+                    </Typography>
+                    <TextField
+                      type="text"
+                      size="small"
+                      name="company"
+                      value={values.company}
+                      onChange={handleChange}
+                      error={!!errors.company}
+                      helperText={errors.company}
                       fullWidth
                     />
                   </Box>
