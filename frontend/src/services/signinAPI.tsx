@@ -21,7 +21,6 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         const response = await axios.get(`${baseURL}/auth/verify`, {
           withCredentials: true,
         });
-        console.log("Verified user data:", response.data.user);
         setUser(response.data.user);
         return response.data;
       } catch (error) {

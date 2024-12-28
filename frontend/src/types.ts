@@ -2,7 +2,7 @@ import { UseMutationOptions } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 
 export interface Job {
-  id?: string;
+  _id?: string;
   title: string;
   postDate?: string;
   type: string;
@@ -23,6 +23,11 @@ export interface JobsResponse {
   status: string;
   message: string;
   data: Job[];
+}
+export interface JobResponse {
+  status: string;
+  message: string;
+  data: Job;
 }
 
 export type UserTypes = {

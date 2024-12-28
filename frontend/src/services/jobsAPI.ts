@@ -1,6 +1,6 @@
 import { useQueryClient, useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { Job, JobsResponse } from "../types";
+import { Job, JobResponse, JobsResponse } from "../types";
 import { baseURL } from "../constant";
 
 type FilterOption = {
@@ -30,6 +30,32 @@ export const useJobs = (filters: FilterOption) => {
   return { jobs, isLoading };
 };
 
+export const useJobById = (jobId: string) => {
+  const {
+    data: job,
+    isPending: isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["job", jobId],
+    queryFn: async () => {
+      const response = await axios.get<JobResponse>(
+        `${baseURL}/jobs/${jobId}`,
+        {
+          withCredentials: true,
+        }
+      );
+      return response.data;
+    },
+    enabled: !!jobId,
+  });
+
+  if (error) {
+    console.error("Error fetching job:", error);
+  }
+
+  return { job, isLoading };
+};
+
 export const useCreateJob = () => {
   const queryClient = useQueryClient();
   const { mutate: create, isPending: isLoading } = useMutation({
@@ -48,4 +74,44 @@ export const useCreateJob = () => {
   });
 
   return { create, isLoading };
+};
+
+type updateParams = { id: string; updateJob: Job };
+
+export const useEditJob = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: editJob, isPending: isLoading } = useMutation({
+    mutationFn: async ({ id, updateJob }: updateParams) => {
+      const response = await axios.patch(`${baseURL}/jobs/${id}`, updateJob, {
+        withCredentials: true,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["jobs"],
+      });
+    },
+  });
+  return { editJob, isLoading };
+};
+
+export const useDeleteJob = () => {
+  const queryClient = useQueryClient();
+
+  const { mutate: deleteJob, isPending: isLoading } = useMutation({
+    mutationFn: async (id: string) => {
+      const response = await axios.delete(`${baseURL}/jobs/${id}`, {
+        withCredentials: true,
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["jobs"],
+      });
+    },
+  });
+  return { deleteJob, isLoading };
 };

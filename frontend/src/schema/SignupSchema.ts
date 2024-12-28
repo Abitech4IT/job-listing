@@ -8,5 +8,5 @@ export const SignupSchema = Yup.object().shape({
     .min(3, "Minimum of 3 characters.")
     .required("Last Name is required"),
   email: Yup.string().email().required("Please enter a valid email"),
-  password: Yup.string().required("Please enter a valid email"),
+  password: Yup.string().required("Please enter your password"),
 });

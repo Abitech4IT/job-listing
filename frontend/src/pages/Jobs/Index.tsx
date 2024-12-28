@@ -1,15 +1,32 @@
-import { Avatar, Button, Chip, Paper, Stack, Typography } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  Chip,
+  Paper,
+  Stack,
+  Typography,
+  IconButton,
+} from "@mui/material";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
 import JobImage from "../../assets/image/jobImg.svg";
 import { useNavigate } from "react-router-dom";
-import { useJobs } from "../../services/jobsAPI";
+import { useDeleteJob, useJobs } from "../../services/jobsAPI";
 import { JobsResponse } from "../../types";
 import { useUser } from "../../services/signinAPI";
 import { useState } from "react";
+import EditJobModal from "../../components/EditJobModal";
+import ConfirmDialog from "../../components/ConfirmDialog";
 
 const AllJobs = () => {
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [jobIdToDelete, setJobIdToDelete] = useState<string | null>(null);
   const { jobs, isLoading } = useJobs({ tags: selectedTags });
   const { user } = useUser();
+  const { deleteJob, isLoading: isDeleting } = useDeleteJob();
 
   const navigate = useNavigate();
 
@@ -23,6 +40,38 @@ const AllJobs = () => {
 
   const clearTags = () => {
     setSelectedTags([]);
+  };
+
+  const handleEdit = (jobId: string) => {
+    if (!jobId) {
+      console.error("Invalid jobId:", jobId);
+      return;
+    }
+    setSelectedJobId(jobId);
+    setEditModalOpen(true);
+  };
+
+  const handleDelete = (jobId: string) => {
+    setJobIdToDelete(jobId);
+    setOpenDialog(true);
+  };
+
+  const handleConfirmDelete = () => {
+    if (jobIdToDelete) {
+      deleteJob(jobIdToDelete);
+    }
+    setOpenDialog(false);
+    setJobIdToDelete(null);
+  };
+
+  const handleCancelDelete = () => {
+    setOpenDialog(false);
+    setJobIdToDelete(null);
+  };
+
+  const handleCloseModal = () => {
+    setEditModalOpen(false);
+    setSelectedJobId(null);
   };
 
   const renderSelectedTags = () => {
@@ -161,7 +210,7 @@ const AllJobs = () => {
 
     return jobsRes?.data.map((item) => (
       <Paper
-        key={item.id}
+        key={item._id}
         sx={{
           padding: "20px",
           display: "flex",
@@ -301,6 +350,16 @@ const AllJobs = () => {
               />
             ))}
         </Stack>
+        {user?.role === "admin" && (
+          <Stack direction="row" spacing={1} sx={{ ml: "auto" }}>
+            <IconButton onClick={() => handleEdit(item._id!)} color="secondary">
+              <EditIcon />
+            </IconButton>
+            <IconButton onClick={() => handleDelete(item._id!)} color="error">
+              <DeleteIcon />
+            </IconButton>
+          </Stack>
+        )}
       </Paper>
     ));
   };
@@ -335,6 +394,17 @@ const AllJobs = () => {
       )}
       {renderSelectedTags()}
       {renderJobList()}
+      <EditJobModal
+        open={editModalOpen}
+        onClose={handleCloseModal}
+        jobId={selectedJobId}
+      />
+      <ConfirmDialog
+        openDialog={openDialog}
+        handleCancelDelete={handleCancelDelete}
+        handleConfirmDelete={handleConfirmDelete}
+        isDeleting={isDeleting}
+      />
     </>
   );
 };
