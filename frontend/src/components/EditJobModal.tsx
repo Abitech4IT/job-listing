@@ -46,57 +46,6 @@ const EditJobModal: React.FC<EditJobModalProps> = ({
       </Stack>
       <DialogTitle textAlign="center">Edit Job</DialogTitle>
       <DialogContent>
-        {/* <Stack spacing={2} sx={{ mt: 2 }}>
-          <TextField
-            name="title"
-            label="Job Title"
-            value={editedJob.title}
-            onChange={handleInputChange}
-            fullWidth
-          />
-          <TextField
-            name="company"
-            label="Company"
-            value={editedJob.company}
-            onChange={handleInputChange}
-            fullWidth
-          />
-          <TextField
-            name="location"
-            label="Location"
-            value={editedJob.location}
-            onChange={handleInputChange}
-            fullWidth
-          />
-          <TextField
-            name="type"
-            label="Job Type"
-            value={editedJob.type}
-            onChange={handleInputChange}
-            fullWidth
-          />
-          <Stack direction="row" spacing={1} alignItems="center">
-            <TextField
-              label="Add Tag"
-              value={newTag}
-              onChange={(e) => setNewTag(e.target.value)}
-              fullWidth
-            />
-            <Button onClick={handleAddTag} variant="contained">
-              Add
-            </Button>
-          </Stack>
-          <Stack direction="row" spacing={1} flexWrap="wrap">
-            {editedJob.tags.map((tag) => (
-              <Chip
-                key={tag}
-                label={tag}
-                onDelete={() => handleRemoveTag(tag)}
-                sx={{ margin: "4px" }}
-              />
-            ))}
-          </Stack>
-        </Stack> */}
         <Formik
           initialValues={{
             title: job.data.title,

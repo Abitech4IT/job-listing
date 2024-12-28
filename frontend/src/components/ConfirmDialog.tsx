@@ -20,24 +20,22 @@ const ConfirmDialog = ({
   isDeleting,
 }: DeleteJobDiialogProps) => {
   return (
-    <div>
-      <Dialog open={openDialog} onClose={handleCancelDelete}>
-        <DialogTitle>Confirm Deletion</DialogTitle>
-        <DialogContent>Are you sure you want to delete this job?</DialogContent>
-        <DialogActions>
-          <Button onClick={handleCancelDelete} color="secondary">
-            Cancel
-          </Button>
-          <Button
-            onClick={handleConfirmDelete}
-            color="error"
-            disabled={isDeleting}
-          >
-            {isDeleting ? "Deleting..." : "Confirm"}
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+    <Dialog open={openDialog} onClose={handleCancelDelete}>
+      <DialogTitle>Confirm Deletion</DialogTitle>
+      <DialogContent>Are you sure you want to delete this job?</DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancelDelete} color="secondary">
+          Cancel
+        </Button>
+        <Button
+          onClick={handleConfirmDelete}
+          color="error"
+          disabled={isDeleting}
+        >
+          {isDeleting ? "Deleting..." : "Confirm"}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 
